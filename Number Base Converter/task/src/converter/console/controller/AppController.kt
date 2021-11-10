@@ -1,9 +1,7 @@
 package converter.console.controller
 
-import converter.console.command.CommandConvertFrom
-import converter.console.command.CommandConvertTo
+import converter.console.command.CommandConvert
 
 interface AppController {
-    fun convertFrom(command: CommandConvertFrom)
-    fun convertTo(command: CommandConvertTo)
+    fun convert(command: CommandConvert)
 }

@@ -473,12 +473,6 @@ files:
 - name: src/converter/console/command/CommandExit.kt
   visible: true
   learner_created: true
-- name: src/converter/console/command/CommandConvertFrom.kt
-  visible: true
-  learner_created: true
-- name: src/converter/console/command/CommandConvertTo.kt
-  visible: true
-  learner_created: true
 - name: src/converter/console/command/CommandFactory.kt
   visible: true
   learner_created: true
@@ -491,9 +485,24 @@ files:
 - name: src/converter/console/ConsoleHelper.kt
   visible: true
   learner_created: true
+- name: src/converter/console/command/CommandBack.kt
+  visible: true
+  learner_created: true
+- name: src/converter/console/command/CommandConvert.kt
+  visible: true
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/165/stages/857/implement#comment
-status: Solved
+status: Failed
 feedback:
-  message: Congratulations!
-  time: Wed, 10 Nov 2021 10:35:12 UTC
-record: -1
+  message: |-
+    Wrong answer in test #1
+
+    Your program should prompt the user with the message &quot;Do you want to convert /from decimal of /to decimal? (To quit type /exit)&quot;
+
+    Please find below the output of your program during this failed test.
+
+    ---
+
+    Enter two numbers in format: {source base} {target base} (To quit type /exit)
+  time: Wed, 10 Nov 2021 11:18:07 UTC
+record: 2

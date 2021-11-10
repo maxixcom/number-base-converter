@@ -3,8 +3,7 @@ package converter.console.command
 class CommandFactoryImpl : CommandFactory {
     private val commands: List<(String) -> Command?> = listOf(
         { input -> parseExit(input) },
-        { input -> parseConvertFrom(input) },
-        { input -> parseConvertTo(input) },
+        { input -> parseBack(input) },
     )
 
     override fun commandFromString(input: String) = commands.firstNotNullOfOrNull { it(input) } ?: CommandUnknown
@@ -15,23 +14,9 @@ class CommandFactoryImpl : CommandFactory {
         }
     }
 
-    private fun parseConvertFrom(input: String): Command? {
-        return "^/from$".toRegex().matchEntire(input)?.let {
-            println("Enter a number in decimal system:")
-            val number = readLine()!!
-            println("Enter the target base:")
-            val targetBase = readLine()!!.toInt()
-            CommandConvertFrom(number, targetBase)
-        }
-    }
-
-    private fun parseConvertTo(input: String): Command? {
-        return "^/to$".toRegex().matchEntire(input)?.let {
-            println("Enter source number:")
-            val number = readLine()!!
-            println("Enter source base:")
-            val targetBase = readLine()!!.toInt()
-            CommandConvertTo(number, targetBase)
+    private fun parseBack(input: String): Command? {
+        return "^/back$".toRegex().matchEntire(input)?.let {
+            CommandBack
         }
     }
 }

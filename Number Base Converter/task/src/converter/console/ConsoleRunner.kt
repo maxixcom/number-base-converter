@@ -1,10 +1,9 @@
 package converter.console
 
 import converter.console.command.Command
-import converter.console.command.CommandConvertFrom
-import converter.console.command.CommandConvertTo
+import converter.console.command.CommandBack
+import converter.console.command.CommandConvert
 import converter.console.command.CommandExit
-import converter.console.command.CommandUnknown
 import converter.console.controller.AppController
 
 class ConsoleRunner : Runnable {
@@ -12,20 +11,34 @@ class ConsoleRunner : Runnable {
 
     override fun run() {
         main@ while (true) {
+            println("Enter two numbers in format: {source base} {target base} (To quit type /exit)")
+            val inputFormat = readLine()!!
+            if (parseCommand(inputFormat) == CommandExit) {
+                break@main
+            }
+            val (sourceBase, targetBase) = inputFormat.split("\\s+".toRegex(), 2).map(String::toInt)
+
             do {
-                printGreeting()
-                val command = enterCommand()
-                when (command) {
+                println("Enter number in base $sourceBase to convert to base $targetBase (To go back type /back)")
+                val input = readLine()!!
+                when (parseCommand(input)) {
                     CommandExit -> break@main
-                    is CommandConvertFrom -> controller.convertFrom(command)
-                    is CommandConvertTo -> controller.convertTo(command)
-                    is CommandUnknown -> println("Wrong command...")
+                    CommandBack -> break
+                    else -> {
+                        controller.convert(
+                            CommandConvert(
+                                number = input,
+                                sourceBase = sourceBase,
+                                targetBase = targetBase,
+                            )
+                        )
+                    }
                 }
-            } while (command == CommandUnknown)
+            } while (true)
         }
     }
 
-    private fun enterCommand(): Command {
-        return Application.commandFactory.commandFromString(readLine()!!)
+    private fun parseCommand(input: String): Command {
+        return Application.commandFactory.commandFromString(input)
     }
 }

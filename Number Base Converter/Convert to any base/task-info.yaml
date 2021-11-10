@@ -536,6 +536,200 @@ files:
         }
     }
   learner_created: false
+- name: src/converter/console/controller/AppController.kt
+  visible: true
+  text: |
+    package converter.console.controller
+
+    import converter.console.command.CommandConvert
+
+    interface AppController {
+        fun convert(command: CommandConvert)
+    }
+  learner_created: true
+- name: src/converter/console/ConsoleRunner.kt
+  visible: true
+  text: |
+    package converter.console
+
+    import converter.console.command.Command
+    import converter.console.command.CommandBack
+    import converter.console.command.CommandConvert
+    import converter.console.command.CommandExit
+    import converter.console.controller.AppController
+
+    class ConsoleRunner : Runnable {
+        private val controller: AppController = Application.appController
+
+        override fun run() {
+            main@ while (true) {
+                val (sourceBase, targetBase) = inputSourceTargetBases()
+                do {
+                    println("Enter number in base $sourceBase to convert to base $targetBase (To go back type /back)")
+                    val input = readLine()!!
+                    when (parseCommand(input)) {
+                        CommandExit -> break@main
+                        CommandBack -> break
+                        else -> {
+                            controller.convert(
+                                CommandConvert(
+                                    number = input,
+                                    sourceBase = sourceBase,
+                                    targetBase = targetBase,
+                                )
+                            )
+                        }
+                    }
+                } while (true)
+            }
+        }
+
+        private fun parseCommand(input: String): Command {
+            return Application.commandFactory.commandFromString(input)
+        }
+    }
+  learner_created: true
+- name: src/converter/console/Application.kt
+  visible: true
+  text: |
+    package converter.console
+
+    import converter.console.command.CommandFactoryImpl
+    import converter.console.controller.AppController
+    import converter.console.controller.AppControllerImpl
+    import converter.service.NumberConverterService
+    import converter.service.NumberConverterServiceImpl
+
+    object Application {
+        private val numberConverterService: NumberConverterService = NumberConverterServiceImpl()
+
+        val appController: AppController = AppControllerImpl(
+            numberConverterService = numberConverterService
+        )
+
+        val commandFactory = CommandFactoryImpl()
+    }
+  learner_created: true
+- name: src/converter/console/command/CommandUnknown.kt
+  visible: true
+  text: |
+    package converter.console.command
+
+    object CommandUnknown : Command
+  learner_created: true
+- name: src/converter/console/command/CommandExit.kt
+  visible: true
+  text: |
+    package converter.console.command
+
+    object CommandExit : Command
+  learner_created: true
+- name: src/converter/service/NumberConverterService.kt
+  visible: true
+  text: |
+    package converter.service
+
+    interface NumberConverterService {
+        fun convert(number: String, fromBase: Int, toBase: Int): String
+        fun fromDecimal(number: Int, toBase: Int) = convert(number.toString(), 10, toBase)
+        fun toDecimal(number: String, fromBase: Int) = convert(number, fromBase, 10)
+    }
+  learner_created: true
+- name: src/converter/console/command/Command.kt
+  visible: true
+  text: |
+    package converter.console.command
+
+    sealed interface Command
+  learner_created: true
+- name: src/converter/console/command/CommandFactoryImpl.kt
+  visible: true
+  text: |
+    package converter.console.command
+
+    class CommandFactoryImpl : CommandFactory {
+        private val commands: List<(String) -> Command?> = listOf(
+            { input -> parseExit(input) },
+            { input -> parseBack(input) },
+        )
+
+        override fun commandFromString(input: String) = commands.firstNotNullOfOrNull { it(input) } ?: CommandUnknown
+
+        private fun parseExit(input: String): Command? {
+            return "^/exit$".toRegex().matchEntire(input)?.let {
+                CommandExit
+            }
+        }
+
+        private fun parseBack(input: String): Command? {
+            return "^/back$".toRegex().matchEntire(input)?.let {
+                CommandBack
+            }
+        }
+    }
+  learner_created: true
+- name: src/converter/console/controller/AppControllerImpl.kt
+  visible: true
+  text: |
+    package converter.console.controller
+
+    import converter.console.command.CommandConvert
+    import converter.service.NumberConverterService
+
+    class AppControllerImpl(
+        private val numberConverterService: NumberConverterService
+    ) : AppController {
+        override fun convert(command: CommandConvert) {
+            val result = numberConverterService.convert(
+                number = command.number,
+                fromBase = command.sourceBase,
+                toBase = command.targetBase,
+            )
+            println("Conversion result: $result")
+        }
+    }
+  learner_created: true
+- name: src/converter/console/command/CommandFactory.kt
+  visible: true
+  text: |
+    package converter.console.command
+
+    interface CommandFactory {
+        fun commandFromString(input: String): Command
+    }
+  learner_created: true
+- name: src/converter/console/command/CommandBack.kt
+  visible: true
+  text: |
+    package converter.console.command
+
+    object CommandBack : Command
+  learner_created: true
+- name: src/converter/console/command/CommandConvert.kt
+  visible: true
+  text: |-
+    package converter.console.command
+
+    class CommandConvert(
+        val number: String,
+        val sourceBase: Int,
+        val targetBase: Int,
+    ) : Command
+  learner_created: true
+- name: src/converter/service/NumberConverterServiceImpl.kt
+  visible: true
+  text: |
+    package converter.service
+
+    class NumberConverterServiceImpl : NumberConverterService {
+        override fun convert(number: String, fromBase: Int, toBase: Int): String {
+            return number.toBigInteger(fromBase).toString(toBase)
+        }
+    }
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/165/stages/858/implement#comment
-status: Unchecked
-record: -1
+status: Solved
+feedback:
+  message: Congratulations!
+  time: Wed, 10 Nov 2021 11:22:26 UTC
+record: 3

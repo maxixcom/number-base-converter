@@ -1,6 +1,7 @@
 package converter.console.command
 
-class CommandConvertTo(
+class CommandConvert(
     val number: String,
     val sourceBase: Int,
+    val targetBase: Int,
 ) : Command
