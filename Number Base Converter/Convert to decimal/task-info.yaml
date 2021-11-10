@@ -433,6 +433,67 @@ files:
       }
     }
   learner_created: false
+- name: src/converter/service/NumberConverterService.kt
+  visible: true
+  text: |
+    package converter.service
+
+    interface NumberConverterService {
+        fun convert(number: String, fromBase: Int, toBase: Int): String
+        fun fromDecimal(number: Int, toBase: Int) = convert(number.toString(), 10, toBase)
+        fun toDecimal(number: Int, fromBase: Int) = convert(number.toString(), fromBase, 10)
+    }
+  learner_created: true
+- name: src/converter/service/NumberConverterServiceImpl.kt
+  visible: true
+  text: |
+    package converter.service
+
+    class NumberConverterServiceImpl : NumberConverterService {
+        override fun convert(number: String, fromBase: Int, toBase: Int): String {
+            return number.toInt(fromBase).toString(toBase)
+        }
+    }
+  learner_created: true
+- name: src/converter/console/ConsoleRunner.kt
+  visible: true
+  learner_created: true
+- name: src/converter/console/Application.kt
+  visible: true
+  learner_created: true
+- name: src/converter/console/controller/AppController.kt
+  visible: true
+  learner_created: true
+- name: src/converter/console/controller/AppControllerImpl.kt
+  visible: true
+  learner_created: true
+- name: src/converter/console/command/Command.kt
+  visible: true
+  learner_created: true
+- name: src/converter/console/command/CommandExit.kt
+  visible: true
+  learner_created: true
+- name: src/converter/console/command/CommandConvertFrom.kt
+  visible: true
+  learner_created: true
+- name: src/converter/console/command/CommandConvertTo.kt
+  visible: true
+  learner_created: true
+- name: src/converter/console/command/CommandFactory.kt
+  visible: true
+  learner_created: true
+- name: src/converter/console/command/CommandFactoryImpl.kt
+  visible: true
+  learner_created: true
+- name: src/converter/console/command/CommandUnknown.kt
+  visible: true
+  learner_created: true
+- name: src/converter/console/ConsoleHelper.kt
+  visible: true
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/165/stages/857/implement#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: Wed, 10 Nov 2021 10:35:12 UTC
 record: -1
